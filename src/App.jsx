@@ -106,10 +106,10 @@ function App() {
   return (
     <div className="App">
       <div className="card">
-        <h2>Password Generator</h2>
+        <h2 className="head1">Password Generator</h2>
         <div className="cont1">
           <input
-            type="text"
+            type="text textx"
             value={handleText}
             onChange={(e) => sethandleText(e.target.value)}
             className="password-box x"
