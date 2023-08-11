@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Checkbox from "./components/Checkbox";
 import "./App.css";
+import zxcvbn from "zxcvbn";
 
 function App() {
   const [password, setPassword] = useState({
@@ -10,6 +11,8 @@ function App() {
     numbers: false,
     symbols: false,
   });
+  const [type, setType] = useState("input");
+  const [score, setScore] = useState(null);
 
   const [handleText, sethandleText] = useState("");
   const [copied, setCopied] = useState(false);
@@ -90,6 +93,16 @@ function App() {
     generateTheWorld(length, uppercase, lowercase, numbers, symbols);
   }
 
+  function testStrengthPassword(e) {
+    const passwordValue = e.target.value;
+    const result = zxcvbn(passwordValue);
+    setScore(result.score);
+  }
+
+  function showHide() {
+    setType(type === "input" ? "password" : "input");
+  }
+
   return (
     <div className="App">
       <div className="card">
@@ -110,7 +123,6 @@ function App() {
                 setTimeout(() => {
                   setCopied(false);
                 }, 2000);
-                
               }
             }}
           >
@@ -119,69 +131,114 @@ function App() {
         </div>
         <br />
         <div>
-        <div className="cont">
-          <div>
-            <label>Password length</label>
-          </div>
-          <div>
-            <input
-              type="number" className="pass"
-              value={password.length}
-              onChange={(e) => setPasswordLength(e.target.value)}
-            />
-          </div>
-        </div>
-        <div className="cont">
-          <div className="checkbox-container">
+          <div className="cont">
             <div>
-              <label className="checkbox-label">Include uppercase letters</label>
+              <label>Password length</label>
             </div>
             <div>
-              <Checkbox value={password.uppercase} onChange={handleChangeUppercase} />
+              <input
+                type="number"
+                className="pass"
+                value={password.length}
+                onChange={(e) => setPasswordLength(e.target.value)}
+              />
             </div>
           </div>
-        </div>
-        <div className="cont">
-          <div className="checkbox-container">
-            <div>
-              <label className="checkbox-label">Include lowercase letters</label>
-            </div>
-            <div>
-              <Checkbox value={password.lowercase} onChange={handleChangeLowercase} />
-            </div>
-          </div>
-        </div>
-        <div className="cont">
-          <div className="checkbox-container">
-            <div>
-              <label className="checkbox-label">Include numbers</label>
-            </div>
-            <div>
-              <Checkbox value={password.numbers} onChange={handleChangeNumbers} />
+          <div className="cont">
+            <div className="checkbox-container">
+              <div>
+                <label className="checkbox-label">
+                  Include uppercase letters
+                </label>
+              </div>
+              <div>
+                <Checkbox
+                  value={password.uppercase}
+                  onChange={handleChangeUppercase}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="cont">
-          <div className="checkbox-container">
-            <div>
-              <label className="checkbox-label">Include symbols</label>
-            </div>
-            <div>
-              <Checkbox value={password.symbols} onChange={handleChangeSymbols} />
+          <div className="cont">
+            <div className="checkbox-container">
+              <div>
+                <label className="checkbox-label">
+                  Include lowercase letters
+                </label>
+              </div>
+              <div>
+                <Checkbox
+                  value={password.lowercase}
+                  onChange={handleChangeLowercase}
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <br />
+          <div className="cont">
+            <div className="checkbox-container">
+              <div>
+                <label className="checkbox-label">Include numbers</label>
+              </div>
+              <div>
+                <Checkbox
+                  value={password.numbers}
+                  onChange={handleChangeNumbers}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="cont">
+            <div className="checkbox-container">
+              <div>
+                <label className="checkbox-label">Include symbols</label>
+              </div>
+              <div>
+                <Checkbox
+                  value={password.symbols}
+                  onChange={handleChangeSymbols}
+                />
+              </div>
+            </div>
+          </div>
+          <br />
         </div>
         <div>
           <button className="generate-button" onClick={generatePassword}>
             Generate password
           </button>
         </div>
-         
       </div>
-      <br /><br /><br />
-      <div className="erdemlabel"><a href="https://github.com/erdemonal11" target="_blank" className="erdemlabel">erdemapps.</a></div>  
+      <br />
+      <br />
+      <label className="label-password">
+        <h2>Password Strength</h2>
+        <input
+          type={type}
+          className="input-password"
+          onChange={testStrengthPassword}
+        />
+        <span className="show-password" onClick={showHide}>
+          {type === "input" ? "Hide" : "Show"}
+        </span>
+        <span className="strength-password" data-score={score} />
+      </label>
+      <br />
+      <br />
+      <a href="https://github.com/dropbox/zxcvbn" target="-blank">
+        zxcvbn
+      </a>{" "}
+      powered strength tester
+      <br />
+      <br />
+      <div className="erdemlabel">
+        <a
+          href="https://github.com/erdemonal11"
+          target="_blank"
+          className="erdemlabel"
+        >
+          erdemapps.
+        </a>
+      </div>
     </div>
   );
 }
